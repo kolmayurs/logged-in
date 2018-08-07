@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {loggedIn} from '../actions/reduxActions';
 import Popup from './Popup';
+import {Redirect} from 'react-router-dom';
 
 const mapStateToProps = (state) => {
   return{
@@ -28,7 +29,8 @@ class App extends Component {
  /* componentDidMount(){
     this.props.loggedIn('asdf@asdf.com','1234');
   }*/
-  submitResponse(){
+  submitResponse(e){
+    e.preventDefault();
     this.props.loggedIn(this.state.email, this.state.password);
   }
   togglePopup() {
@@ -37,15 +39,18 @@ class App extends Component {
     });
   }
   render() {
+    if(this.props.login){
+      return <Redirect to='/dashboard'/>;
+    }
     return (
       <div className="App">
         <div className="login">
           <div className="login-triangle"></div>
           <h2 className="login-header">Log in</h2>
-          <form className="login-container">
+          <form className="login-container" onSubmit={this.submitResponse}>
             <p><input type="email" onChange={e => {this.setState({email: e.target.value})}} placeholder="Email" autoComplete="off" required /></p>
             <p><input type="password" onChange={e => {this.setState({password: e.target.value})}} placeholder="Password" minLength="4" maxLength="8" autoComplete="off" required/></p>
-            <p><input type="submit" value="Log in" onClick={this.submitResponse} /></p>
+            <p><input type="submit" value="Log in" /></p>
           </form>
         </div>
         <button onClick={this.togglePopup.bind(this)}>show popup</button>
